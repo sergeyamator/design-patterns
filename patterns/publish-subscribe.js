@@ -21,3 +21,4 @@ EventBas.subscribe('foo', (msg) => {
 });
 
 EventBas.publish('foo', 'Hello world');
+EventBas.publish('foo', 'Another world');

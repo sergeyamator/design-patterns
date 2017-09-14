@@ -1,4 +1,4 @@
-const EventBas = {
+const EventBus = {
     channels: {},
     subscribe(channelName, listener) {
         if (!this.channels[channelName]) {
@@ -16,9 +16,29 @@ const EventBas = {
     }
 };
 
-EventBas.subscribe('foo', (msg) => {
-    console.log(msg);
-});
+class Order {
+    constructor (params) {
+        this.params = params
+    }
 
-EventBas.publish('foo', 'Hello world');
-EventBas.publish('foo', 'Another world');
+    save () {
+        console.log('Order saved')
+        EventBus.publish('order/new', {
+            userEmail: this.params.userEmail
+        })
+    }
+}
+
+class Mailer {
+    constructor () {
+        EventBus.subscribe('order/new', this.sendPurchaseEmail)
+    }
+
+    sendPurchaseEmail (params) {
+        console.log(`Email send to ${params.userEmail}`)
+    }
+}
+
+const mailer = new Mailer();
+const order = new Order({userEmail: 'john@gmail.com'})
+order.save();
